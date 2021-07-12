@@ -188,8 +188,8 @@ void Calculator::encrypt(bytes in[], word w[])
     for (int i = 0; i < 4; ++i)
     {
         key[i] = w[i];
-    AddRoundKey(in, key);
     }
+    AddRoundKey(in, key);
 
     for (int round = 1; round < N_round; ++round)
     {
@@ -197,7 +197,10 @@ void Calculator::encrypt(bytes in[], word w[])
         ShiftRows(in);
         MixColumns(in);
         for (int i = 0; i < 4; ++i)
+        {
             key[i] = w[4 * round + i];
+        }
+
         AddRoundKey(in, key);
     }
 
@@ -225,7 +228,9 @@ void Calculator::InvShiftRows(bytes mtx[])
     // 第二行循环右移一位
     bytes temp = mtx[7];
     for (int i = 3; i > 0; --i)
+    {
         mtx[i + 4] = mtx[i + 3];
+    }
     mtx[4] = temp;
     // 第三行循环右移两位
     for (int i = 0; i < 2; ++i)
@@ -237,7 +242,9 @@ void Calculator::InvShiftRows(bytes mtx[])
     // 第四行循环右移三位
     temp = mtx[12];
     for (int i = 0; i < 3; ++i)
+    {
         mtx[i + 12] = mtx[i + 13];
+    }
     mtx[15] = temp;
 }
 
@@ -259,7 +266,9 @@ void Calculator::decrypt(bytes in[], word w[])
 {
     word key[4];
     for (int i = 0; i < 4; ++i)
+    {
         key[i] = w[4 * N_round + i];
+    }
     AddRoundKey(in, key);
 
     for (int round = N_round - 1; round > 0; --round)
@@ -275,7 +284,9 @@ void Calculator::decrypt(bytes in[], word w[])
     InvShiftRows(in);
     InvSubBytes(in);
     for (int i = 0; i < 4; ++i)
+    {
         key[i] = w[i];
+    }
     AddRoundKey(in, key);
 }
 
@@ -387,21 +398,14 @@ void Calculator::encryptChoose(QString filePath, QString passwordKey)
     bytes plain[16];
 
     string readFilePath = filePath.toStdString();
-
-//    string readFilePath = "file:///home/lbw/Desktop/png/kll.txt";
-
     string str = readFilePath;
     string encryptFilePath = str.replace(str.find(".") + 1, str.size(), "stl");
-//    string encryptFilePath = "file:///home/lbw/Desktop/png/ss.txt";
-
-    qDebug() << QString::fromStdString(readFilePath);
-    qDebug() << QString::fromStdString(encryptFilePath);
 
     QFileInfo fileInfo(QString::fromStdString(readFilePath));
 
     string addNumber = "";
     bool isTxtFile = (fileInfo.suffix() == "txt");
-    if (isTxtFile)
+    if (true)
     {
         ifstream judgeSizeIn(readFilePath, ios::binary);
         stringstream buffer;
@@ -432,10 +436,12 @@ void Calculator::encryptChoose(QString filePath, QString passwordKey)
         judgeSizeIn.close();
     }
 
+    QTime time;
+    time.start();
+
     ifstream in;
     ofstream out;
     in.open(readFilePath, ios::binary);
-
     out.open(encryptFilePath, ios::binary);
     while (in.read((char*)&data, sizeof(data)))
     {
@@ -449,4 +455,29 @@ void Calculator::encryptChoose(QString filePath, QString passwordKey)
     in.close();
     out.close();
     qDebug() << "加密完成";
+    qDebug() << time.elapsed()/1000.0 << "s";
+    time.restart();
+
+//    in.open(encryptFilePath, ios::binary);
+//    out.open("/home/lbw/Desktop/png/result.zip", ios::binary);
+//    while (in.read((char*)&data, sizeof(data)))
+//    {
+//        divideToByte(plain, data);
+//        decrypt(plain, w);
+//        data = mergeByte(plain);
+//        out.write((char*)&data, sizeof(data));
+//        data.reset();  // 置0
+//    }
+//    in.close();
+//    out.close();
+
+//    if (isTxtFile)
+//    {
+//        QFile choseFile(QString::fromStdString(readFilePath));
+//        choseFile.resize(choseFile.size() - QString::fromStdString(addNumber).size());
+//        choseFile.close();
+//    }
+
+//    qDebug() << " 解密完成";
+//    qDebug() << time.elapsed()/1000.0 << "s";
 }

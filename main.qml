@@ -5,11 +5,14 @@ import QtQuick.Controls 2.0
 import AesCalculator 1.0
 
 import QtQuick.Dialogs 1.2
+import Qt.labs.settings 1.0
 
 Window {
     id: root
-    width: 640
+    width: 700
     height: 480
+    minimumHeight: 480
+    minimumWidth: 700
     visible: true
     title: qsTr("Hello World")
 
@@ -35,8 +38,15 @@ Window {
                 TextField {
                     id: textField
                     anchors.fill: parent
-                    text: "file:///home/lbw/Desktop/png/kll.txt"
+                    text: settings.filePath
                     font.pixelSize: 15
+                }
+                Settings {
+                    id: settings
+                    property string filePath: textField.text
+                }
+                Component.onDestruction: {
+                    settings.filePath = textField.text
                 }
             }
 
@@ -45,7 +55,6 @@ Window {
                 height: 40
                 text: "选择"
                 onClicked: {
-//                    aesTest.aesTest()
                     fileDialog.open()
                 }
             }
@@ -54,9 +63,16 @@ Window {
                 id: fileDialog
                 title: "choose file"
                 folder: shortcuts.desktop
-                nameFilters: ["txt文件(*.txt)"]
+                nameFilters: ["txt文件(*.txt), rar文件(*.rar), zip文件(*.zip)"]
                 onAccepted: {
-//                    textField.text = String(fileUrl)
+                    textField.text = String(fileUrl)
+                    remove(String(fileUrl))
+                }
+                function remove(text){
+                    var reg = new RegExp("file://")
+                    var a = text.replace(reg, "")
+                    textField.text = a
+                    console.log(a)
                 }
             }
 
@@ -92,13 +108,16 @@ Window {
                 height: 40
                 text: "开始"
                 onClicked: {
-                    aesTest.encryptChoose(remove(), password.text)
+                    aesTest.encryptChoose(textField.text, password.text)
                 }
-                function remove(){
-                    var text = textField.text
-                    var reg = new RegExp("file://")
-                    var a = text.replace(reg, "");
-                    return a
+            }
+
+            Button {
+                width: 80
+                height: 40
+                text: "解"
+                onClicked: {
+
                 }
             }
 

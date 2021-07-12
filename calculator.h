@@ -12,7 +12,7 @@
 #include <QFile>
 #include <QString>
 #include <QFileInfo>
-#include <algorithm>
+#include <QTime>
 
 using namespace std;
 typedef bitset<8> bytes;
