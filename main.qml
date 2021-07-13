@@ -20,6 +20,14 @@ Window {
         id: aesTest
     }
 
+    Popup {
+        id: popup
+        anchors.centerIn: parent
+        width: root.width / 2
+        height: 20
+        opacity: 0.5
+    }
+
     ColumnLayout {
         anchors.fill: parent
 
@@ -108,7 +116,9 @@ Window {
                 height: 40
                 text: "开始"
                 onClicked: {
-                    aesTest.encryptChoose(textField.text, password.text)
+//                    aesTest.encryptChoose(textField.text, password.text)
+                    progressBarTimer.start()
+
                 }
             }
 
@@ -125,6 +135,40 @@ Window {
                 Layout.fillWidth: true
             }
 
+        }
+        ProgressBar {
+            id: progressBar
+            width: root.width / 2
+            Layout.alignment: Qt.AlignHCenter
+            height: 15
+            background: Rectangle {
+                implicitHeight: parent.height
+                implicitWidth: parent.width
+                color: "lightGrey"
+                opacity: 0.5
+            }
+            contentItem: Item {
+                Rectangle {
+                    width: progressBar.visualPosition * progressBar.width
+                    height: progressBar.height
+                    color: "black"
+                }
+            }
+
+            Timer {
+                id: progressBarTimer
+                interval: 100
+                repeat: true
+                running: false
+                onTriggered: {
+                    if (parent.value < 1.0){
+                        parent.value += 0.01
+                    } else {
+                        progressBar.value = 0
+                        stop()
+                    }
+                }
+            }
         }
     }
 }
