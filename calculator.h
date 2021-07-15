@@ -108,6 +108,7 @@ public:
     void decrypt(bytes in[4 * 4], word w[4 * (N_round + 1)]);
 
     Q_INVOKABLE void aesTest();
+    Q_INVOKABLE double getFileSize(QString fileName);
     Q_INVOKABLE void encryptChoose(QString filePath, QString passwordKey);
 
 };

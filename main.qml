@@ -30,7 +30,6 @@ Window {
 
     ColumnLayout {
         anchors.fill: parent
-
         RowLayout {
             spacing: 20
             Rectangle {
@@ -91,10 +90,7 @@ Window {
 
         RowLayout {
             spacing: 20
-
-            Rectangle {
-                Layout.fillWidth: true
-            }
+            Layout.alignment: Qt.AlignHCenter
 
             Text {
                 text: "输入密钥"
@@ -117,8 +113,9 @@ Window {
                 text: "开始"
                 onClicked: {
 //                    aesTest.encryptChoose(textField.text, password.text)
-                    progressBarTimer.start()
-
+//                    progressBarTimer.start()
+//2.5321
+                    aesTest.getFileSize(textField.text)
                 }
             }
 
@@ -130,45 +127,58 @@ Window {
 
                 }
             }
-
-            Rectangle {
-                Layout.fillWidth: true
-            }
-
         }
-        ProgressBar {
-            id: progressBar
-            width: root.width / 2
+        RowLayout {
+            spacing: 10
             Layout.alignment: Qt.AlignHCenter
-            height: 15
-            background: Rectangle {
-                implicitHeight: parent.height
-                implicitWidth: parent.width
-                color: "lightGrey"
-                opacity: 0.5
-            }
-            contentItem: Item {
-                Rectangle {
-                    width: progressBar.visualPosition * progressBar.width
-                    height: progressBar.height
-                    color: "black"
+            ProgressBar {
+                id: progressBar
+                width: root.width / 2
+                height: 15
+                background: Rectangle {
+                    implicitHeight: parent.height
+                    implicitWidth: parent.width
+                    color: "lightGrey"
+                    opacity: 0.5
                 }
-            }
+                contentItem: Item {
+                    Rectangle {
+                        width: progressBar.visualPosition * progressBar.width
+                        height: progressBar.height
+                        color: "black"
+                    }
+                }
 
-            Timer {
-                id: progressBarTimer
-                interval: 100
-                repeat: true
-                running: false
-                onTriggered: {
-                    if (parent.value < 1.0){
-                        parent.value += 0.01
-                    } else {
-                        progressBar.value = 0
-                        stop()
+                Behavior on value {
+                    NumberAnimation {
+                        duration: progressBarTimer.interval
+                    }
+                }
+
+                Timer {
+                    id: progressBarTimer
+                    interval: 100
+                    repeat: true
+                    running: false
+                    onTriggered: {
+                        if (parent.value < 1.0){
+                            parent.value += 0.1
+                            percentage.text = parseInt(parent.value * 100) + " %"
+                        } else {
+                            percentage.text = "已完成"
+                            progressBar.value = 0
+                            stop()
+                        }
                     }
                 }
             }
+            Text {
+                id: percentage
+                text: "未开始"
+            }
+        }
+        Rectangle {
+            height: 40
         }
     }
 }

@@ -385,6 +385,24 @@ void Calculator::aesTest()
     qDebug() << " 解密完成";
 }
 
+double Calculator::getFileSize(QString fileName)
+{
+    double size;
+    QFile file(fileName);
+    if(!file.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "file can not open";
+    }
+    else
+    {
+        size = file.size();
+        file.close();
+        qDebug() << size;
+        return size;
+    }
+    return 0;
+}
+
 void Calculator::encryptChoose(QString filePath, QString passwordKey)
 {
 
@@ -479,5 +497,5 @@ void Calculator::encryptChoose(QString filePath, QString passwordKey)
 //    }
 
 //    qDebug() << " 解密完成";
-//    qDebug() << time.elapsed()/1000.0 << "s";
+    //    qDebug() << time.elapsed()/1000.0 << "s";
 }
