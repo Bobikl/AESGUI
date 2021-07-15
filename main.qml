@@ -52,6 +52,10 @@ Window {
                     id: settings
                     property string filePath: textField.text
                 }
+                Component.onCompleted: {
+                    getTime(settings.filePath)
+                }
+
                 Component.onDestruction: {
                     settings.filePath = textField.text
                 }
@@ -70,7 +74,7 @@ Window {
                 id: fileDialog
                 title: "choose file"
                 folder: shortcuts.desktop
-                nameFilters: ["txt文件(*.txt), rar文件(*.rar), zip文件(*.zip)"]
+                nameFilters: ["txt文件(*.txt), rar文件(*.rar), zip文件(*.zip), png文件(*.png)"]
                 onAccepted: {
                     textField.text = String(fileUrl)
                     remove(String(fileUrl))
@@ -79,6 +83,7 @@ Window {
                     var reg = new RegExp("file://")
                     var a = text.replace(reg, "")
                     textField.text = a
+                    getTime(a)
                     console.log(a)
                 }
             }
@@ -115,7 +120,7 @@ Window {
 //                    aesTest.encryptChoose(textField.text, password.text)
 //                    progressBarTimer.start()
 //2.5321
-                    aesTest.getFileSize(textField.text)
+                    percentage.text = "预计" + (aesTest.getFileSize(textField.text) / 2.5321).toFixed(2) + "分"
                 }
             }
 
@@ -180,5 +185,19 @@ Window {
         Rectangle {
             height: 40
         }
+    }
+    function getTime(time){
+        var t_Time
+        var size = aesTest.getFileSize(time)
+        if (size === 0)
+        {
+            t_Time = "预计" + 0.2 + "分"
+        }
+        else
+        {
+            t_Time = "预计" + (size / 2.5321).toFixed(2) + "分"
+        }
+
+        percentage.text = t_Time
     }
 }

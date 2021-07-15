@@ -385,22 +385,40 @@ void Calculator::aesTest()
     qDebug() << " 解密完成";
 }
 
-double Calculator::getFileSize(QString fileName)
+int Calculator::getFileSize(QString fileName)
 {
-    double size;
-    QFile file(fileName);
-    if(!file.open(QIODevice::ReadOnly))
+//    int size;
+//    QFile file(fileName);
+//    if(!file.open(QIODevice::ReadOnly))
+//    {
+//        qDebug() << "file can not open";
+//    }
+//    else
+//    {
+//        size = file.size() / 1024 / 1024;
+//        file.close();
+//        return size;
+//    }
+//    return 0;
+    QFileInfo info(fileName);
+    unsigned int ret = 0;
+    if (info.isFile())
     {
-        qDebug() << "file can not open";
+        ret = info.size() / 1000000;
+        if (ret <= 2)
+        {
+            return 0;
+        }
+        else
+        {
+            return ret;
+        }
+        qDebug() << ret;
     }
     else
     {
-        size = file.size();
-        file.close();
-        qDebug() << size;
-        return size;
+        return 0;
     }
-    return 0;
 }
 
 void Calculator::encryptChoose(QString filePath, QString passwordKey)
