@@ -3,7 +3,7 @@ import QtQuick.Window 2.2
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import AesCalculator 1.0
-
+import AddThread 1.0
 import QtQuick.Dialogs 1.2
 import Qt.labs.settings 1.0
 
@@ -18,6 +18,9 @@ Window {
 
     AES {
         id: aesTest
+    }
+    ThreadTest {
+        id: threadTest
     }
 
     Popup {
@@ -117,10 +120,13 @@ Window {
                 height: 40
                 text: "开始"
                 onClicked: {
+                    progressBarTimer.start()
 //                    aesTest.encryptChoose(textField.text, password.text)
-//                    progressBarTimer.start()
 //2.5321
-                    percentage.text = "预计" + (aesTest.getFileSize(textField.text) / 2.5321).toFixed(2) + "分"
+//                    percentage.text = "预计" + (aesTest.getFileSize(textField.text) / 2.5321).toFixed(2) + "秒"
+                    threadTest.data = textField.text
+                    threadTest.password = password.text
+                    threadTest.acceptMessage()
                 }
             }
 
@@ -183,21 +189,17 @@ Window {
             }
         }
         Rectangle {
-            height: 40
+            height: 15
         }
     }
     function getTime(time){
         var t_Time
         var size = aesTest.getFileSize(time)
-        if (size === 0)
-        {
-            t_Time = "预计" + 0.2 + "分"
+        if (size === 0) {
+            t_Time = "预计" + 1 + "秒"
+        } else {
+            t_Time = "预计" + (size / 2.5321).toFixed(2) + "秒"
         }
-        else
-        {
-            t_Time = "预计" + (size / 2.5321).toFixed(2) + "分"
-        }
-
         percentage.text = t_Time
     }
 }

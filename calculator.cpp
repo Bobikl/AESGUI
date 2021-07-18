@@ -423,7 +423,7 @@ int Calculator::getFileSize(QString fileName)
 
 void Calculator::encryptChoose(QString filePath, QString passwordKey)
 {
-
+    qDebug() << QThread::currentThreadId();
     string KeyStr = passwordKey.toStdString();
     bytes key[16];
     charToByte(key, KeyStr.c_str());
