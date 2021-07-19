@@ -1,8 +1,13 @@
 #include "addthreadtest.h"
 
+addThreadTest::addThreadTest()
+{
+
+}
+
 void addThreadTest::process()
 {
-    qDebug() << "test Thread id is: " << QThread::currentThreadId();
+    qDebug() << "add Thread id is: " << QThread::currentThreadId();
     calculator.encryptChoose(filePath, password);
 }
 

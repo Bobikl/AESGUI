@@ -16,6 +16,9 @@ Window {
     visible: true
     title: qsTr("Hello World")
 
+    property int fileSize: 0
+    property bool miniSize: false
+
     AES {
         id: aesTest
     }
@@ -87,7 +90,7 @@ Window {
                     var a = text.replace(reg, "")
                     textField.text = a
                     getTime(a)
-                    console.log(a)
+                    progressBar.value = 0
                 }
             }
 
@@ -120,6 +123,12 @@ Window {
                 height: 40
                 text: "开始"
                 onClicked: {
+                    if (miniSize){
+                        progressBar.value = 1
+                    } else {
+                        progressBar.value = 0
+                    }
+
                     progressBarTimer.start()
 //                    aesTest.encryptChoose(textField.text, password.text)
 //2.5321
@@ -162,6 +171,7 @@ Window {
 
                 Behavior on value {
                     NumberAnimation {
+                        id: animation
                         duration: progressBarTimer.interval
                     }
                 }
@@ -172,12 +182,11 @@ Window {
                     repeat: true
                     running: false
                     onTriggered: {
-                        if (parent.value < 1.0){
-                            parent.value += 0.1
+                        if (parent.value < 1.0 && !miniSize){
+                            parent.value = (aesTest.getEncryptFileSize(textField.text) / fileSize).toFixed(2)
                             percentage.text = parseInt(parent.value * 100) + " %"
                         } else {
                             percentage.text = "已完成"
-                            progressBar.value = 0
                             stop()
                         }
                     }
@@ -195,10 +204,13 @@ Window {
     function getTime(time){
         var t_Time
         var size = aesTest.getFileSize(time)
+        fileSize = size;
         if (size === 0) {
             t_Time = "预计" + 1 + "秒"
+            miniSize = true
         } else {
             t_Time = "预计" + (size / 2.5321).toFixed(2) + "秒"
+            miniSize = false
         }
         percentage.text = t_Time
     }

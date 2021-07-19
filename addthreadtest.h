@@ -10,7 +10,7 @@ class addThreadTest : public QObject
 {
     Q_OBJECT
 public:
-    addThreadTest() : mData(){};
+    addThreadTest();
 
 public slots:
     void process();
@@ -31,16 +31,16 @@ private:
 class addThreadTestInterFace : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString data WRITE setData USER false)
-    Q_PROPERTY(QString password WRITE setPassword USER false)
+    Q_PROPERTY(QString data WRITE setData)
+    Q_PROPERTY(QString password WRITE setPassword)
 public:
-    addThreadTestInterFace() : mAddthreadtest(){
+    addThreadTestInterFace(){
         mAddthreadtest.moveToThread(&mThread);
         connect(this, &addThreadTestInterFace::acceptMessage, &mAddthreadtest, &addThreadTest::process);
         connect(this, &addThreadTestInterFace::sendFilePath, &mAddthreadtest, &addThreadTest::getData);
         connect(this, &addThreadTestInterFace::sendPassword, &mAddthreadtest, &addThreadTest::getPassword);
         mThread.start();
-    };
+    }
 
     void setData(QString data){
         mData = data;

@@ -14,6 +14,7 @@
 #include <QFileInfo>
 #include <QTime>
 #include <math.h>
+#include <QElapsedTimer>
 
 #include <QThread>
 
@@ -27,6 +28,8 @@ const int N_key = 4;
 class Calculator : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString sendFileSize READ getFileSize)
+    Q_PROPERTY(QString sendEncryptFileName READ getEncryptFileName)
 public:
 
     bytes S_Box[16][16] = {
@@ -113,7 +116,18 @@ public:
     Q_INVOKABLE void aesTest();
     Q_INVOKABLE int getFileSize(QString fileName);
     Q_INVOKABLE void encryptChoose(QString filePath, QString passwordKey);
+    Q_INVOKABLE int getEncryptFileSize(QString fileName);
 
+
+    QString fileSize;
+    QString encryptFileName;
+
+    QString getFileSize(){
+        return fileSize;
+    }
+    QString getEncryptFileName(){
+        return encryptFileName;
+    }
 };
 
 #endif // CALCULATOR_H

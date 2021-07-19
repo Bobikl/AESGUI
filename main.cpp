@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
 
-    qDebug() << "main thread id: " << QThread::currentThreadId();
+    qDebug() << "main thread id is: " << QThread::currentThreadId();
     qmlRegisterType<Calculator>("AesCalculator", 1, 0, "AES");
     qmlRegisterType<addThreadTestInterFace>("AddThread", 1, 0, "ThreadTest");
 

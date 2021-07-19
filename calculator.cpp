@@ -387,19 +387,6 @@ void Calculator::aesTest()
 
 int Calculator::getFileSize(QString fileName)
 {
-//    int size;
-//    QFile file(fileName);
-//    if(!file.open(QIODevice::ReadOnly))
-//    {
-//        qDebug() << "file can not open";
-//    }
-//    else
-//    {
-//        size = file.size() / 1024 / 1024;
-//        file.close();
-//        return size;
-//    }
-//    return 0;
     QFileInfo info(fileName);
     unsigned int ret = 0;
     if (info.isFile())
@@ -407,23 +394,15 @@ int Calculator::getFileSize(QString fileName)
         ret = info.size() / 1000000;
         if (ret <= 2)
         {
-            return 0;
+            ret = 0;
         }
-        else
-        {
-            return ret;
-        }
-        qDebug() << ret;
     }
-    else
-    {
-        return 0;
-    }
+    return ret;
 }
 
 void Calculator::encryptChoose(QString filePath, QString passwordKey)
 {
-    qDebug() << QThread::currentThreadId();
+    qDebug() << "calculator thread id id: " << QThread::currentThreadId();
     string KeyStr = passwordKey.toStdString();
     bytes key[16];
     charToByte(key, KeyStr.c_str());
@@ -436,11 +415,9 @@ void Calculator::encryptChoose(QString filePath, QString passwordKey)
     string readFilePath = filePath.toStdString();
     string str = readFilePath;
     string encryptFilePath = str.replace(str.find(".") + 1, str.size(), "stl");
-
-    QFileInfo fileInfo(QString::fromStdString(readFilePath));
-
     string addNumber = "";
-    bool isTxtFile = (fileInfo.suffix() == "txt");
+//    QFileInfo fileInfo(QString::fromStdString(readFilePath));
+//    bool isTxtFile = (fileInfo.suffix() == "txt");
     if (true)
     {
         ifstream judgeSizeIn(readFilePath, ios::binary);
@@ -472,8 +449,8 @@ void Calculator::encryptChoose(QString filePath, QString passwordKey)
         judgeSizeIn.close();
     }
 
-    QTime time;
-    time.start();
+    QElapsedTimer timer;
+    timer.start();
 
     ifstream in;
     ofstream out;
@@ -491,8 +468,8 @@ void Calculator::encryptChoose(QString filePath, QString passwordKey)
     in.close();
     out.close();
     qDebug() << "加密完成";
-    qDebug() << time.elapsed()/1000.0 << "s";
-    time.restart();
+    qDebug() << timer.elapsed()/1000.0 << "s";
+
 
 //    in.open(encryptFilePath, ios::binary);
 //    out.open("/home/lbw/Desktop/png/result.zip", ios::binary);
@@ -517,3 +494,22 @@ void Calculator::encryptChoose(QString filePath, QString passwordKey)
 //    qDebug() << " 解密完成";
     //    qDebug() << time.elapsed()/1000.0 << "s";
 }
+
+int Calculator::getEncryptFileSize(QString filePath)
+{
+    string str = filePath.toStdString();
+    string encryptFilePath = str.replace(str.find(".") + 1, str.size(), "stl");
+    QString path = QString::fromStdString(encryptFilePath);
+    QFileInfo info(path);
+    unsigned int ret = 0;
+    if (info.isFile())
+    {
+        ret = info.size() / 1000000;
+        if (ret <= 2)
+        {
+            ret = 0;
+        }
+    }
+    return ret;
+}
+
