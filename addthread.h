@@ -1,19 +1,19 @@
-#ifndef ADDTHREADTEST_H
-#define ADDTHREADTEST_H
+#ifndef ADDTHREAD_H
+#define ADDTHREAD_H
 
 #include <QObject>
 #include <QThread>
 #include <QDebug>
 #include <calculator.h>
 
-class addThreadTest : public QObject
+class addThread : public QObject
 {
     Q_OBJECT
 public:
-    addThreadTest();
+    addThread();
 
 public slots:
-    void process();
+    void process(int x);
     void getData(QString path){
         filePath = path;
     }
@@ -28,20 +28,23 @@ private:
     Calculator calculator;
 };
 
-class addThreadTestInterFace : public QObject
+class addThreadInterFace : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString data WRITE setData)
     Q_PROPERTY(QString password WRITE setPassword)
 public:
-    addThreadTestInterFace(){
-        mAddthreadtest.moveToThread(&mThread);
-        connect(this, &addThreadTestInterFace::acceptMessage, &mAddthreadtest, &addThreadTest::process);
-        connect(this, &addThreadTestInterFace::sendFilePath, &mAddthreadtest, &addThreadTest::getData);
-        connect(this, &addThreadTestInterFace::sendPassword, &mAddthreadtest, &addThreadTest::getPassword);
+    addThreadInterFace(){
+        mAddthread.moveToThread(&mThread);
+        connect(this, &addThreadInterFace::sendFilePath, &mAddthread, &addThread::getData);
+        connect(this, &addThreadInterFace::sendPassword, &mAddthread, &addThread::getPassword);
+        connect(this, &addThreadInterFace::acceptMessage, &mAddthread, &addThread::process);
         mThread.start();
     }
 
+    void startThread(){
+
+    }
     void setData(QString data){
         mData = data;
         emit sendFilePath(mData);
@@ -50,17 +53,17 @@ public:
         emit sendPassword(password);
     }
 
-    ~addThreadTestInterFace(){
+    ~addThreadInterFace(){
         mThread.exit();
     }
 signals:
-    void acceptMessage();
+    void acceptMessage(int x);
     void sendFilePath(QString filePath);
     void sendPassword(QString password);
 
 private:
     QString mData;
     QThread mThread;
-    addThreadTest mAddthreadtest;
+    addThread mAddthread;
 };
-#endif // ADDTHREADTEST_H
+#endif // ADDTHREAD_H

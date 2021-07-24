@@ -115,8 +115,9 @@ public:
 
     Q_INVOKABLE void aesTest();
     Q_INVOKABLE int getFileSize(QString fileName);
-    Q_INVOKABLE void encryptChoose(QString filePath, QString passwordKey);
+    void encryptChooseFile(QString filePath, QString passwordKey);
     Q_INVOKABLE int getEncryptFileSize(QString fileName);
+    void decryptChooseFile(QString filePath, QString passwordKey);
 
 
     QString fileSize;

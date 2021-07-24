@@ -80,7 +80,7 @@ Window {
                 id: fileDialog
                 title: "choose file"
                 folder: shortcuts.desktop
-                nameFilters: ["txt文件(*.txt), rar文件(*.rar), zip文件(*.zip), png文件(*.png)"]
+                nameFilters: ["txt文件(*.txt), rar文件(*.rar), zip文件(*.zip), png文件(*.png), xz文件(*.xz), stl文件(*.stl)"]
                 onAccepted: {
                     textField.text = String(fileUrl)
                     remove(String(fileUrl))
@@ -130,12 +130,9 @@ Window {
                     }
 
                     progressBarTimer.start()
-//                    aesTest.encryptChoose(textField.text, password.text)
-//2.5321
-//                    percentage.text = "预计" + (aesTest.getFileSize(textField.text) / 2.5321).toFixed(2) + "秒"
                     threadTest.data = textField.text
                     threadTest.password = password.text
-                    threadTest.acceptMessage()
+                    threadTest.acceptMessage(0)
                 }
             }
 

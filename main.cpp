@@ -1,7 +1,7 @@
 ﻿#include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <calculator.h>
-#include <addthreadtest.h>
+#include <addthread.h>
 int main(int argc, char *argv[])
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 
     qDebug() << "main thread id is: " << QThread::currentThreadId();
     qmlRegisterType<Calculator>("AesCalculator", 1, 0, "AES");
-    qmlRegisterType<addThreadTestInterFace>("AddThread", 1, 0, "ThreadTest");
+    qmlRegisterType<addThreadInterFace>("AddThread", 1, 0, "ThreadTest");
 
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {

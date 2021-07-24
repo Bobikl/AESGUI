@@ -3,3 +3,4 @@ AESGUI for CuteFishOs Linux
 21/7/16 add progressbar
 21/7/18 增加多线程，避免主窗口卡死
 21/7/19 增加较为准确的进度条
+21/7/24 增加解密

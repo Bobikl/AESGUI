@@ -400,9 +400,8 @@ int Calculator::getFileSize(QString fileName)
     return ret;
 }
 
-void Calculator::encryptChoose(QString filePath, QString passwordKey)
+void Calculator::encryptChooseFile(QString filePath, QString passwordKey)
 {
-    qDebug() << "calculator thread id id: " << QThread::currentThreadId();
     string KeyStr = passwordKey.toStdString();
     bytes key[16];
     charToByte(key, KeyStr.c_str());
@@ -468,31 +467,7 @@ void Calculator::encryptChoose(QString filePath, QString passwordKey)
     in.close();
     out.close();
     qDebug() << "加密完成";
-    qDebug() << timer.elapsed()/1000.0 << "s";
-
-
-//    in.open(encryptFilePath, ios::binary);
-//    out.open("/home/lbw/Desktop/png/result.zip", ios::binary);
-//    while (in.read((char*)&data, sizeof(data)))
-//    {
-//        divideToByte(plain, data);
-//        decrypt(plain, w);
-//        data = mergeByte(plain);
-//        out.write((char*)&data, sizeof(data));
-//        data.reset();  // 置0
-//    }
-//    in.close();
-//    out.close();
-
-//    if (isTxtFile)
-//    {
-//        QFile choseFile(QString::fromStdString(readFilePath));
-//        choseFile.resize(choseFile.size() - QString::fromStdString(addNumber).size());
-//        choseFile.close();
-//    }
-
-//    qDebug() << " 解密完成";
-    //    qDebug() << time.elapsed()/1000.0 << "s";
+    qDebug() << timer.elapsed() / 1000.0 << "s";
 }
 
 int Calculator::getEncryptFileSize(QString filePath)
@@ -511,5 +486,40 @@ int Calculator::getEncryptFileSize(QString filePath)
         }
     }
     return ret;
+}
+
+void Calculator::decryptChooseFile(QString filePath, QString passwordKey)
+{
+    string KeyStr = passwordKey.toStdString();
+    bytes key[16];
+    charToByte(key, KeyStr.c_str());
+    word w[4 * (N_round + 1)];
+    KeyExpansion(key, w);
+
+    bitset<128> data;
+    bytes plain[16];
+
+    string readFilePath = filePath.toStdString();
+    string str = readFilePath;
+    string decryptFilePath = str.replace(str.find(".") + 1, str.size(), "xz");
+    ifstream in;
+    ofstream out;
+    QElapsedTimer timer;
+    timer.start();
+    in.open(readFilePath, ios::binary);
+    out.open(decryptFilePath, ios::binary);
+    while (in.read((char*)&data, sizeof(data)))
+    {
+        divideToByte(plain, data);
+        decrypt(plain, w);
+        data = mergeByte(plain);
+        out.write((char*)&data, sizeof(data));
+        data.reset();  // 置0
+    }
+    in.close();
+    out.close();
+    qDebug() << "解密完成";
+    qDebug() << timer.elapsed() / 1000 << "s";
+
 }
 
