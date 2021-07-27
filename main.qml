@@ -18,6 +18,7 @@ Window {
 
     property int fileSize: 0
     property bool miniSize: false
+    property double speed: 2.5321
 
     AES {
         id: aesTest
@@ -57,13 +58,16 @@ Window {
                 Settings {
                     id: settings
                     property string filePath: textField.text
+                    property double s_Speed: speed
                 }
                 Component.onCompleted: {
+                    speed = settings.s_Speed
                     getTime(settings.filePath)
                 }
 
                 Component.onDestruction: {
                     settings.filePath = textField.text
+                    settings.s_Speed = speed
                 }
             }
 
@@ -86,11 +90,20 @@ Window {
                     remove(String(fileUrl))
                 }
                 function remove(text){
-                    var reg = new RegExp("file://")
+                    const reg = new RegExp("file://")
+                    const fileType = new RegExp(".stl")
+                    console.log(reg.test(text))
+                    if (fileType.test(text)){
+                        speed = 1.5
+                    } else {
+                        speed = 2.5321
+                    }
+                    if (reg.test(text)){
                     var a = text.replace(reg, "")
                     textField.text = a
                     getTime(a)
                     progressBar.value = 0
+                    }
                 }
             }
 
@@ -215,7 +228,7 @@ Window {
             t_Time = "预计" + 1 + "秒"
             miniSize = true
         } else {
-            t_Time = "预计" + (size / 2.5321).toFixed(2) + "秒"
+            t_Time = "预计" + (size / speed).toFixed(2) + "秒"
             miniSize = false
         }
         percentage.text = t_Time
