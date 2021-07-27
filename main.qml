@@ -141,7 +141,16 @@ Window {
                 height: 40
                 text: "解"
                 onClicked: {
+                    if (miniSize){
+                        progressBar.value = 1
+                    } else {
+                        progressBar.value = 0
+                    }
 
+                    progressBarTimer.start()
+                    threadTest.data = textField.text
+                    threadTest.password = password.text
+                    threadTest.acceptMessage(1)
                 }
             }
         }

@@ -472,11 +472,18 @@ void Calculator::encryptChooseFile(QString filePath, QString passwordKey)
 
 int Calculator::getEncryptFileSize(QString filePath)
 {
+    QFileInfo fileInfo(filePath);
+    bool isStlFile = (fileInfo.suffix() == "stl");
+    unsigned int ret = 0;
+    string fileSuffix = "stl";
+    if (isStlFile)
+    {
+        fileSuffix = "zip";
+    }
     string str = filePath.toStdString();
-    string encryptFilePath = str.replace(str.find(".") + 1, str.size(), "stl");
+    string encryptFilePath = str.replace(str.find(".") + 1, str.size(), fileSuffix);
     QString path = QString::fromStdString(encryptFilePath);
     QFileInfo info(path);
-    unsigned int ret = 0;
     if (info.isFile())
     {
         ret = info.size() / 1000000;
@@ -501,7 +508,7 @@ void Calculator::decryptChooseFile(QString filePath, QString passwordKey)
 
     string readFilePath = filePath.toStdString();
     string str = readFilePath;
-    string decryptFilePath = str.replace(str.find(".") + 1, str.size(), "xz");
+    string decryptFilePath = str.replace(str.find(".") + 1, str.size(), "zip");
     ifstream in;
     ofstream out;
     QElapsedTimer timer;
