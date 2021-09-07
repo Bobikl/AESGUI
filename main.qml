@@ -113,7 +113,7 @@ Window {
         }
 
         RowLayout {
-            spacing: 20
+            spacing: 5
             Layout.alignment: Qt.AlignHCenter
 
             Text {
@@ -132,6 +132,7 @@ Window {
             }
 
             Button {
+                id: tests
                 width: 80
                 height: 40
                 text: "开始"
@@ -146,6 +147,20 @@ Window {
                     threadTest.data = textField.text
                     threadTest.password = password.text
                     threadTest.acceptMessage(0)
+                }
+            }
+
+            ComboBox {
+                id: decryptFormat
+                currentIndex: 0
+                model: ["无", "txt", "png", "jpg", "zip", "rar"]
+                clip: true
+                background: Rectangle {
+                    implicitHeight: 40
+                    implicitWidth: 70
+                    color: "lightGrey"
+                    opacity: 0.3
+                    radius: 10
                 }
             }
 
